@@ -1,6 +1,8 @@
 const http = require('http');
 const myEmitter = require ('./events.js');
-const {indexPage, aboutPage, subscribePage, contactPage, productsPage} = require ('./routes.js');
+
+const { indexPage, aboutPage, subscribePage, contactPage, productsPage, weatherPage } = require ('./routes.js');
+
 
 global.DEBUG = false;
 const port = 3000;
@@ -21,13 +23,13 @@ const server = http.createServer((request, response) => {
         case '/about':
             if (DEBUG) console.log ('About Page');
             path += 'about.html';
-            aboutPage(path, response);
+            aboutPage(path,response);
             break;
 
         case '/subscribe':
             if (DEBUG) console.log ('Subscribe Page');
             path += 'subscribe.html';
-            subscribePage(path, response);
+            subscribePage(path,response);
             break;
 
         case '/products':
@@ -39,17 +41,24 @@ const server = http.createServer((request, response) => {
         case '/contact':
             if (DEBUG) console.log ('Contact Page');
             path += 'contact.html';
-            contactPage(path, response);
+            contactPage(path,response);
             break;
-        
+
+        case '/weather':
+            if (DEBUG) console.log ('Weather Page');
+            path += 'weather.html';
+            weatherPage(path, response);
+            break;
+                   
         default:
             if (DEBUG) console.log ('404 not found');  
             response.writeHead(404, {'Content-Type':'text/html'});
             response.end('404 not found');
             myEmitter.emit('statusCode', [404]); 
-            myEmitter.emit('error', '404 - Please check your URL.');      
+            myEmitter.emit('error', '404 - Please check your URL.');
             break;
-    };    
+    };        
+
 });
 
 server.listen(port,() => {
