@@ -3,6 +3,7 @@ const pathModule = require('path');
 const myEmitter = require ('./events.js');
 var weather = require('weather-js');
 
+
 function indexPage(path, response){
     fetchFile(path,response);
     myEmitter.emit('route', path);
@@ -79,6 +80,7 @@ async function weatherPage(path, response) {
     };
 };
     
+
 function fetchFile(filename, response){
     fs.readFile(filename, (error,content)=>{
         if (DEBUG) console.log("Inside fetchFile");
@@ -97,4 +99,5 @@ function fetchFile(filename, response){
     }); 
 };
 
-module.exports = { indexPage, aboutPage, subscribePage, productsPage,contactPage, weatherPage };
+module.exports = { indexPage, aboutPage, subscribePage, productsPage, contactPage, weatherPage };
+

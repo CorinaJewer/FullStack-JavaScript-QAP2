@@ -1,12 +1,14 @@
 const http = require('http');
 const myEmitter = require ('./events.js');
+
 const { indexPage, aboutPage, subscribePage, contactPage, productsPage, weatherPage } = require ('./routes.js');
+
 
 global.DEBUG = false;
 const port = 3000;
 
 const server = http.createServer((request, response) => {
-    if (DEBUG)console.log('Requested URL:', request.url)
+    if (DEBUG)console.log('Requested URL:', request.url);
     let path = "./views/";
 
     switch (request.url){
@@ -49,19 +51,17 @@ const server = http.createServer((request, response) => {
             break;
                    
         default:
-            if (DEBUG) console.log ('404 not found');
+            if (DEBUG) console.log ('404 not found');  
             response.writeHead(404, {'Content-Type':'text/html'});
             response.end('404 not found');
             myEmitter.emit('statusCode', [404]); 
             myEmitter.emit('error', '404 - Please check your URL.');
             break;
     };        
+
 });
 
 server.listen(port,() => {
-    console.log(`Server is sucessfully running on port ${port}.`)
+    console.log(`Server is sucessfully running on port ${port}.`);
 });
-
-
-
 

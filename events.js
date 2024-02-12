@@ -44,3 +44,4 @@ myEmitter.on('error', (errorMessage) => {
 });
 
 module.exports = myEmitter;
+
