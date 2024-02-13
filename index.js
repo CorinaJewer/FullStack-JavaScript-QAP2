@@ -8,6 +8,14 @@ global.DEBUG = false;
 const port = 3000;
 
 const server = http.createServer((request, response) => {
+
+    if (request.url === '/favicon.ico') {
+        response.writeHead(204, { 'Content-Type' : 'image/x-icon'});
+        response.end();
+        return;
+    }
+
+
     if (DEBUG)console.log('Requested URL:', request.url);
     let path = "./views/";
 
@@ -56,9 +64,9 @@ const server = http.createServer((request, response) => {
             response.end('404 not found');
             myEmitter.emit('statusCode', [404]); 
             myEmitter.emit('error', '404 - Please check your URL.');
+            myEmitter.emit('logEvent', [path], 'error','Please check URL')
             break;
     };        
-
 });
 
 server.listen(port,() => {
