@@ -7,31 +7,36 @@ var weather = require('weather-js');
 function indexPage(path, response){
     fetchFile(path,response);
     myEmitter.emit('route', path);
-}
+    myEmitter.emit('logEvent', [path], 'info','home page requested');
+};
 
 function aboutPage(path, response){
     fetchFile(path,response);
-    myEmitter.emit('route', path);
-    myEmitter.emit('notHome', path);
-}
+    myEmitter.emit('route', [path]);
+    myEmitter.emit('notHome', [path]);
+    myEmitter.emit('logEvent', [path], 'info','about page requested');
+};
 
 function subscribePage(path, response){
     fetchFile(path,response);
-    myEmitter.emit('route', path);
-    myEmitter.emit('notHome', path);
-}
+    myEmitter.emit('route', [path]);
+    myEmitter.emit('notHome', [path]);
+    myEmitter.emit('logEvent', [path], 'info','subscribe page requested');
+};
 
 function productsPage(path, response){
     fetchFile(path,response);
-    myEmitter.emit('route', path);
-    myEmitter.emit('notHome', path);
-}
+    myEmitter.emit('route', [path]);
+    myEmitter.emit('notHome', [path]);
+    myEmitter.emit('logEvent', [path], 'info','products page requested');
+};
 
 function contactPage(path, response){
     fetchFile(path,response);
-    myEmitter.emit('route', path);
-    myEmitter.emit('notHome', path);
-}
+    myEmitter.emit('route', [path]);
+    myEmitter.emit('notHome', [path]);
+    myEmitter.emit('logEvent', [path], 'info','contact page requested');
+};
 
 async function weatherPage(path, response) {
     try {
@@ -70,17 +75,19 @@ async function weatherPage(path, response) {
         myEmitter.emit('notHome', [path]);
         myEmitter.emit('statusCode', [200]);
         myEmitter.emit('fileFound',[path]);
+        myEmitter.emit('logEvent', [path], 'info','weather page requested');
+        myEmitter.emit('logEvent', [path], 'info', 'successful fetching weather data');    
 
     } catch (err) {
         response.writeHead(500, { 'Content-Type': 'text/plain' });
         response.end('Error fetching weather data.');
         myEmitter('status code', [500])
         myEmitter.emit('noSuchFile', [path]); 
-        myEmitter('error', 'Error fetching weather data.')        
+        myEmitter('error', 'Error fetching weather data.')  
+        myEmitter.emit('logEvent', [path], 'error',' unsuccessful fetching weather data ');      
     };
 };
     
-
 function fetchFile(filename, response){
     fs.readFile(filename, (error,content)=>{
         if (DEBUG) console.log("Inside fetchFile");
@@ -89,12 +96,14 @@ function fetchFile(filename, response){
             response.end('500 Internal Server Error') 
             myEmitter.emit('statusCode', [500]); 
             myEmitter.emit('noSuchFile', [filename]); 
-            myEmitter.emit('error', '500 Internal serve error.')             
+            myEmitter.emit('error', '500 Internal serve error.')   
+            myEmitter.emit('logEvent', [filename], 'error','unsuccesful fetching file');          
         }else{
             response.writeHead(200, {'Content-Type':'text/html'});
             response.end(content,'utf-8');
             myEmitter.emit('statusCode', [200]);
-            myEmitter.emit('fileFound',[filename] );           
+            myEmitter.emit('fileFound',[filename] );
+            myEmitter.emit('logEvent', [filename], 'info', 'successful fetching file');             
         };
     }); 
 };
